@@ -7,12 +7,12 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D), typeof(PlayerInput))]
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private Camera _boundaryCamera;
-    [SerializeField] private float _movementSpeed = 6f;
+    [SerializeField] private Camera _boundaryCamera;    // Camera used to calculate the playable area. Can be null.
+    [SerializeField] private float _movementSpeed = 6f; // Multiplier for movement speed
 
     private Rigidbody2D _rigidbody;
-    private Vector2 _movementInput = Vector2.zero;
-    private Vector2 _boundaryExtents;
+    private Vector2 _movementInput = Vector2.zero;      // Current movement input from player control
+    private Vector2 _boundaryExtents;                   // The half-extents of the origin-centered playable boundary.
 
 
     private void Awake()
@@ -53,6 +53,9 @@ public class PlayerMovement : MonoBehaviour
     /// <returns>2D World-space boundaries for the player</returns>
     private Vector2 CalculateCameraBoundary(Camera cam)
     {
+        // Camera's orthographic size is distance from the center to top boundary.
+        // Multiply that by the aspect ratio to get the horizontal distance.
+
         Vector2 extents = new Vector2();
         extents.x = cam.orthographicSize * cam.aspect;
         extents.y = cam.orthographicSize;
@@ -73,5 +76,6 @@ public class PlayerMovement : MonoBehaviour
         );
     }
 
+    // Input handlers
     private void OnMove(InputValue value) => _movementInput = value.Get<Vector2>();
 }
